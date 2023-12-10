@@ -43,7 +43,8 @@ for (var i = 0; i < sheetNames.length; ++i) {
       return line
   })
 
-  const content = expandedRange.map(line => line.join('\t')).join('\n')
+  const content = expandedRange.map(line => line.map(str => str.replaceAll('\n', '\\n')).join('\t')).join('\n')
+  // console.log(content)
   fs.writeFile(sheetDir + "/" + sheetName + ".tsv", content, (err, data) => {
     if(err) console.log(err);
   })
