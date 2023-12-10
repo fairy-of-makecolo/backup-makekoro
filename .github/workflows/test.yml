@@ -16,9 +16,6 @@ jobs:
       id-token: "write"
       
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: package
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -39,14 +36,20 @@ jobs:
           service_account: ${{ secrets.SERVICE_ACCOUNT }}
 
       - run: npm ci
+        working-directory: package
       - run: npm run fetch
+        working-directory: package
 
       - name: Set current datetime as env variable
         env:
           TZ: 'Asia/Tokyo' # タイムゾーン指定
         run: echo "CURRENT_DATETIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
-
+      - id: diff
+        run: |
+          git add -N .
+          git diff --name-only --exit-code
+        continue-on-error: true
       - name: Commit & Push
         run: |
           set -x
@@ -55,3 +58,4 @@ jobs:
           git add .
           git commit --author=. -m 'backup ${{ env.CURRENT_DATETIME }}'
           git push
+        if: steps.diff.outcome == 'failure'
