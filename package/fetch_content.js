@@ -27,7 +27,6 @@ fs.writeFile(sheetDir + "/sheetdata.json", JSON.stringify(resSheet.data, null, 2
 })
 
 const sheetNames = resSheet.data.sheets.map(sheet => sheet.properties.title)
-console.log(sheetNames)
 const resRanges = await sheets.spreadsheets.values.batchGet({
   spreadsheetId: sheetId,
   ranges: sheetNames
