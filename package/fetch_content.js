@@ -1,6 +1,5 @@
 import { google } from "googleapis";
 import * as fs from "node:fs";
-import { stringify } from "node:querystring";
 
 const SCOPES = [
   "https://www.googleapis.com/auth/spreadsheets",
@@ -35,16 +34,16 @@ const resRanges = await sheets.spreadsheets.values.batchGet({
 for (var i = 0; i < sheetNames.length; ++i) {
   const sheetName = sheetNames[i]
   const range = resRanges.data.valueRanges[i].values
-  const maxlength = range.reduce((arr1, arr2) => Math.max(arr1.length, arr2.length))
+  const maxlength = range.reduce((acc, arr) => Math.max(acc, arr.length), 0)
 
   const expandedRange = range.map(line => {
     if (line.length < maxlength)
-      return line + new Array(maxlength - line.length).fill("")
+      return line.concat(new Array(maxlength - line.length).fill(""))
     else
       return line
   })
 
-  const content = expandedRange.map(line => (line).join('\t')).join('\n')
+  const content = expandedRange.map(line => line.join('\t')).join('\n')
   fs.writeFile(sheetDir + "/" + sheetName + ".tsv", content, (err, data) => {
     if(err) console.log(err);
   })
