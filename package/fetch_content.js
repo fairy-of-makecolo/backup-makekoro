@@ -10,7 +10,7 @@ const auth = new google.auth.GoogleAuth({
 });
 
 const sheetId = "10fX-tYd2C5JtpzxNado6Zb5MD1xswwHUIghkmXJxlfA";
-const sheets = google.sheets({ version: "v4", auth: authClient });
+const sheets = google.sheets({ version: "v4", auth });
 const res = await sheets.spreadsheets.values.get({
   spreadsheetId: sheetId,
   range: "現在連敗状況!A1:B6",
