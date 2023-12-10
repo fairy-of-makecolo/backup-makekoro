@@ -1,0 +1,12 @@
+{
+  "name": "package",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "fetch": "node fetch_content.js"
+  },
+  "type": "module",
+  "dependencies": {
+    "googleapis": "^129.0.0"
+  }
+}

@@ -1,8 +1,7 @@
 import { google } from "googleapis";
-import { GoogleAuth } from "google-auth-library";
 
 const SCOPES = [
-  "https://www.googleapis.com/auth/spreadsheets"
+  "https://www.googleapis.com/auth/spreadsheets",
   "https://www.googleapis.com/auth/spreadsheets.readonly",
 ];
 
