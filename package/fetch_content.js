@@ -1,9 +1,13 @@
 import { google } from "googleapis";
+import * as fs from "node:fs";
+import { stringify } from "node:querystring";
 
 const SCOPES = [
   "https://www.googleapis.com/auth/spreadsheets",
   "https://www.googleapis.com/auth/spreadsheets.readonly",
 ];
+
+const dstDir = "../backup"
 
 const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
@@ -11,9 +15,30 @@ const auth = new google.auth.GoogleAuth({
 
 const sheetId = "10fX-tYd2C5JtpzxNado6Zb5MD1xswwHUIghkmXJxlfA";
 const sheets = google.sheets({ version: "v4", auth });
-const res = await sheets.spreadsheets.values.get({
-  spreadsheetId: sheetId,
-  range: "現在連敗状況!A1:B6",
+const resSheet = await sheets.spreadsheets.get({
+  spreadsheetId: sheetId
 });
 
-console.log(res.data.value);
+const sheetDir = dstDir + '/' + sheetId
+fs.mkdirSync(sheetDir, { recursive: true });
+
+fs.writeFile(sheetDir + "/sheetdata.json", JSON.stringify(resSheet.data, null, 2), (err, data) => {
+  if(err) console.log(err);
+})
+
+const sheetNames = resSheet.data.sheets.map(sheet => sheet.properties.title)
+console.log(sheetNames)
+const resRanges = await sheets.spreadsheets.values.batchGet({
+  spreadsheetId: sheetId,
+  ranges: sheetNames
+})
+
+for (var i = 0; i < sheetNames.length; ++i) {
+  const sheetName = sheetNames[i]
+  const range = resRanges.data.valueRanges[i]
+
+  const content = range.values.map(line => line.join('\t')).join('\n')
+  fs.writeFile(sheetDir + "/" + sheetName + ".tsv", content, (err, data) => {
+    if(err) console.log(err);
+  })
+}
