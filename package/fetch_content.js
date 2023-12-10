@@ -35,8 +35,9 @@ const resRanges = await sheets.spreadsheets.values.batchGet({
 for (var i = 0; i < sheetNames.length; ++i) {
   const sheetName = sheetNames[i]
   const range = resRanges.data.valueRanges[i]
+  const maxlength = range.reduce((arr1, arr2) => Math.max(arr1.length, arr2.length))
 
-  const content = range.values.map(line => line.join('\t')).join('\n')
+  const content = range.values.map(line => (line + new Array(maxlength - line.length).fill("")).join('\t')).join('\n')
   fs.writeFile(sheetDir + "/" + sheetName + ".tsv", content, (err, data) => {
     if(err) console.log(err);
   })
