@@ -16,6 +16,9 @@ jobs:
       id-token: "write"
       
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: package
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -36,4 +39,3 @@ jobs:
 
       - run: npm ci
       - run: npm run fetch
-        working-directory: package
