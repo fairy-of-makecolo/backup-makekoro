@@ -28,7 +28,8 @@ jobs:
         with:
           node-version: 20.x
           cache: "npm"
-      
+          cache-dependency-path: package/package-lock.json
+
       - id: "auth"
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v1"
