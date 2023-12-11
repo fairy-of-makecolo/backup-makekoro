@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "fetch": "node fetch_content.js"
+    "fetch": "node fetch_content.js",
+    "generate": "node generate.js"
   },
   "type": "module",
   "dependencies": {
