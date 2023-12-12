@@ -5,6 +5,7 @@ name: Generate from Backup
 # Controls when the workflow will run
 on:
   workflow_dispatch:
+    inputs:
       sheet_id:
         required: true
 
