@@ -1,4 +1,5 @@
 import { google } from "googleapis";
+import { parse } from "csv-parse/sync"
 import * as fs from "node:fs";
 
 const SCOPES = [
@@ -37,7 +38,34 @@ for (const sheet of savedProperty.sheets) {
             properties: sheet.properties
         }
     })
+
+    const content = fs.readFileSync(sheetDir + "/" + sheet.properties.title + ".tsv", "utf8")
+    const matrix = parse(content, {delimiter: '\t', relax_quotes: true, escape: '\\'})
+    const requestMatrix = matrix.map(row => {
+        return {
+            values: row.map(value => {
+                return {
+                    userEnteredValue: {
+                        stringValue: value
+                    }
+                }
+            })
+        }
+    })
+    requestList.push({
+        updateCells: {
+            rows: requestMatrix,
+            fields: "userEnteredValue",
+            start: {
+                sheetId: sheet.properties.sheetId,
+                rowIndex: 0,
+                columnIndex: 0
+            }
+        }
+    })
 }
+
+
 
 sheets.spreadsheets.batchUpdate({
     spreadsheetId: createdSheet.spreadsheetId,
