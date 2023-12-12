@@ -20,7 +20,7 @@ const drive = google.drive({version: "v3", auth});
 
 const createdSheet = (await sheets.spreadsheets.create()).data
 
-const sheetId = "10fX-tYd2C5JtpzxNado6Zb5MD1xswwHUIghkmXJxlfA";
+const sheetId = process.argv[2];
 const sheetDir = dstDir + '/' + sheetId
 const savedProperty = JSON.parse(fs.readFileSync(sheetDir + "/sheetdata.json", "utf8"))
 

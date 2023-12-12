@@ -5,6 +5,8 @@ name: Generate from Backup
 # Controls when the workflow will run
 on:
   workflow_dispatch:
+      sheet_id:
+        required: true
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -37,5 +39,5 @@ jobs:
 
       - run: npm ci
         working-directory: package
-      - run: npm run generate
+      - run: npm run generate ${{ github.event.inputs.sheet_id }}
         working-directory: package

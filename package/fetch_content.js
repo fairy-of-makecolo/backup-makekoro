@@ -12,7 +12,7 @@ const auth = new google.auth.GoogleAuth({
   scopes: SCOPES,
 });
 
-const sheetId = "10fX-tYd2C5JtpzxNado6Zb5MD1xswwHUIghkmXJxlfA";
+const sheetId = process.argv[2];
 const sheets = google.sheets({ version: "v4", auth });
 const resSheet = await sheets.spreadsheets.get({
   spreadsheetId: sheetId
